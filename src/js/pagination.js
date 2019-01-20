@@ -1,13 +1,13 @@
 ;(function() {
   'use strict'
 
-  const table = document.getElementById('medals-table');
+  const table = document.querySelector('.js-medals-table');
   const allRows = table.tBodies[0].rows;
-  const inputRowsPerPage = document.querySelector('.show__input');
-  const positions = document.querySelectorAll('.position');
-  const pagerList = document.querySelector('.pager__list');
-  const prevPage = document.querySelector('.pager__prev');
-  const nextPage = document.querySelector('.pager__next');
+  const inputRowsPerPage = document.querySelector('.js-show__input');
+  const positions = document.querySelectorAll('.js-position');
+  const pagerList = document.querySelector('.js-pager__list');
+  const prevPage = document.querySelector('.js-pager__prev');
+  const nextPage = document.querySelector('.js-pager__next');
   const rowsInfoFrom = document.querySelector('.js-number-of-rows-from');
   const rowsInfoTo = document.querySelector('.js-number-of-rows-to');
   const from = document.querySelector('.js-number-of-rows-from');
@@ -30,9 +30,9 @@
         for (var i = s; i < f; i++) {
           let anchorToPage = document.createElement('a');
           let listItem = document.createElement('li');
-          anchorToPage.className = 'pager__page';
+          anchorToPage.className = 'js-pager__page';
           anchorToPage.innerHTML = i;
-          listItem.className = 'pager__list-item';
+          listItem.className = 'js-pager__list-item';
           listItem.appendChild(anchorToPage);
           Pagination.pagintatorBody.appendChild(listItem);
         }
@@ -43,10 +43,10 @@
       let ellipsis = document.createElement('li');
       let lastAnchor = document.createElement('a');
       lastAnchor.innerHTML = Pagination.numberOfPages;
-      lastAnchor.className = 'pager__page';
+      lastAnchor.className = 'js-pager__page';
       lastListItem.appendChild(lastAnchor);
       ellipsis.innerHTML = '...';
-      lastListItem.className = ellipsis.className = 'pager__list-item';
+      lastListItem.className = ellipsis.className = 'js-pager__list-item';
       Pagination.pagintatorBody.appendChild(ellipsis);
       Pagination.pagintatorBody.appendChild(lastListItem);
     },
@@ -56,10 +56,10 @@
       let ellipsis = document.createElement('li');
       let firstAnchor = document.createElement('a');
       firstAnchor.innerHTML = '1';
-      firstAnchor.className = 'pager__page';
+      firstAnchor.className = 'js-pager__page';
       firstListItem.appendChild(firstAnchor);
       ellipsis.innerHTML = '...';
-      firstListItem.className = ellipsis.className = 'pager__list-item';
+      firstListItem.className = ellipsis.className = 'js-pager__list-item';
       Pagination.pagintatorBody.appendChild(firstListItem);
       Pagination.pagintatorBody.appendChild(ellipsis);
     },
@@ -67,7 +67,7 @@
     Bind: function() {
       var a = Pagination.pagintatorBody.getElementsByTagName('a');
       for (var i = 0; i < a.length; i++) {
-        if (+a[i].innerHTML === Pagination.currentPage) a[i].classList.toggle('pager__page--current');
+        if (+a[i].innerHTML === Pagination.currentPage) a[i].classList.toggle('js-pager__page--current');
         a[i].addEventListener('click', Pagination.Click, false);
       }
     },
@@ -82,7 +82,7 @@
       event.preventDefault();
       Pagination.currentPage--;
       if (Pagination.currentPage < 1) {
-          Pagination.currentPage = 1;
+        Pagination.currentPage = 1;
       }
       Pagination.Start();
     },
@@ -97,8 +97,18 @@
     },
 
     Buttons: function(pr, nx) {
-        pr.addEventListener('click', Pagination.Prev, false);
-        nx.addEventListener('click', Pagination.Next, false);
+      pr.addEventListener('click', Pagination.Prev, false);
+      nx.addEventListener('click', Pagination.Next, false);
+    },
+
+    DeactivateBtn: function() {
+      Pagination.btnPrev.classList.remove('js-visibility');
+      Pagination.btnNext.classList.remove('js-visibility');
+      if (Pagination.currentPage === 1) {
+        Pagination.btnPrev.classList.add('js-visibility');
+      } else if (Pagination.currentPage === Pagination.numberOfPages) {
+        Pagination.btnNext.classList.add('js-visibility');
+      }
     },
 
     Counters: function() {
@@ -135,6 +145,7 @@
       }
       Pagination.Bind();
       Pagination.Counters();
+      Pagination.DeactivateBtn();
       Pagination.ShowMeRows();
     },
 
@@ -152,6 +163,8 @@
       Pagination.countFrom = counterFrom;
       Pagination.countTo = counterTo;
       Pagination.rows = arr;
+      Pagination.btnNext = next;
+      Pagination.btnPrev = prev;
       Pagination.SetNumberOfPage(arr);
       Pagination.Buttons(prev, next);
       Pagination.Start();
