@@ -1,5 +1,5 @@
 ;(function() {
-  'use strict'
+  'use strict';
 
   const table = document.querySelector('.js-medals-table');
   const allRows = table.tBodies[0].rows;
@@ -8,25 +8,22 @@
   const pagerList = document.querySelector('.js-pager__list');
   const prevPage = document.querySelector('.js-pager__prev');
   const nextPage = document.querySelector('.js-pager__next');
-  const rowsInfoFrom = document.querySelector('.js-number-of-rows-from');
-  const rowsInfoTo = document.querySelector('.js-number-of-rows-to');
   const from = document.querySelector('.js-number-of-rows-from');
   const to = document.querySelector('.js-number-of-rows-to');
   const loadPage = new Event('DOMContentLoaded');
-  const onInput = new Event('input');
 
   [].forEach.call(positions, (item, i) => { item.innerHTML = i + 1; });
 
-  let Pagination = {
+  let pagination = {
     currentPage: 1,
     numberOfPages: 0,
     step: 1,
 
-    SetNumberOfPage: function(arrOfRows) {
-      Pagination.numberOfPages = Math.ceil(arrOfRows.length / Pagination.showingRows);
+    setNumberOfPage: function(arrOfRows) {
+      this.numberOfPages = Math.ceil(arrOfRows.length / this.showingRows);
     },
 
-    Add: function(s, f) {
+    add: function(s, f) {
         for (var i = s; i < f; i++) {
           let anchorToPage = document.createElement('a');
           let listItem = document.createElement('li');
@@ -34,24 +31,24 @@
           anchorToPage.innerHTML = i;
           listItem.className = 'js-pager__list-item';
           listItem.appendChild(anchorToPage);
-          Pagination.pagintatorBody.appendChild(listItem);
+          this.pagintatorBody.appendChild(listItem);
         }
     },
 
-    Last: function() {
+    last: function() {
       let lastListItem = document.createElement('li');
       let ellipsis = document.createElement('li');
       let lastAnchor = document.createElement('a');
-      lastAnchor.innerHTML = Pagination.numberOfPages;
+      lastAnchor.innerHTML = this.numberOfPages;
       lastAnchor.className = 'js-pager__page';
       lastListItem.appendChild(lastAnchor);
       ellipsis.innerHTML = '...';
       lastListItem.className = ellipsis.className = 'js-pager__list-item';
-      Pagination.pagintatorBody.appendChild(ellipsis);
-      Pagination.pagintatorBody.appendChild(lastListItem);
+      this.pagintatorBody.appendChild(ellipsis);
+      this.pagintatorBody.appendChild(lastListItem);
     },
 
-    First: function() {
+    first: function() {
       let firstListItem = document.createElement('li');
       let ellipsis = document.createElement('li');
       let firstAnchor = document.createElement('a');
@@ -60,67 +57,67 @@
       firstListItem.appendChild(firstAnchor);
       ellipsis.innerHTML = '...';
       firstListItem.className = ellipsis.className = 'js-pager__list-item';
-      Pagination.pagintatorBody.appendChild(firstListItem);
-      Pagination.pagintatorBody.appendChild(ellipsis);
+      this.pagintatorBody.appendChild(firstListItem);
+      this.pagintatorBody.appendChild(ellipsis);
     },
 
-    Bind: function() {
-      var a = Pagination.pagintatorBody.getElementsByTagName('a');
+    bind: function() {
+      var a = this.pagintatorBody.getElementsByTagName('a');
       for (var i = 0; i < a.length; i++) {
-        if (+a[i].innerHTML === Pagination.currentPage) a[i].classList.toggle('js-pager__page--current');
-        a[i].addEventListener('click', Pagination.Click, false);
+        if (+a[i].innerHTML === this.currentPage) a[i].classList.toggle('js-pager__page--current');
+        a[i].addEventListener('click', pagination.click, false);
       }
     },
 
-    Click: function(event) {
+    click: function(event) {
       event.preventDefault();
-      Pagination.currentPage = +this.innerHTML;
-      Pagination.Start();
+      pagination.currentPage = +this.innerHTML;
+      pagination.start();
     },
 
-    Prev: function(event) {
+    prev: function(event) {
       event.preventDefault();
-      Pagination.currentPage--;
-      if (Pagination.currentPage < 1) {
-        Pagination.currentPage = 1;
+      pagination.currentPage--;
+      if (pagination.currentPage < 1) {
+        pagination.currentPage = 1;
       }
-      Pagination.Start();
+      pagination.start();
     },
 
-    Next: function(event) {
+    next: function(event) {
       event.preventDefault();
-      Pagination.currentPage++;
-      if (Pagination.currentPage > Pagination.numberOfPages) {
-          Pagination.currentPage = Pagination.numberOfPages;
+      pagination.currentPage++;
+      if (pagination.currentPage > pagination.numberOfPages) {
+          pagination.currentPage = pagination.numberOfPages;
       }
-      Pagination.Start();
+      pagination.start();
     },
 
-    Buttons: function(pr, nx) {
-      pr.addEventListener('click', Pagination.Prev, false);
-      nx.addEventListener('click', Pagination.Next, false);
+    buttons: function(pr, nx) {
+      pr.addEventListener('click', pagination.prev, false);
+      nx.addEventListener('click', pagination.next, false);
     },
 
-    DeactivateBtn: function() {
-      Pagination.btnPrev.classList.remove('js-visibility');
-      Pagination.btnNext.classList.remove('js-visibility');
-      if (Pagination.currentPage === 1) {
-        Pagination.btnPrev.classList.add('js-visibility');
-      } else if (Pagination.currentPage === Pagination.numberOfPages) {
-        Pagination.btnNext.classList.add('js-visibility');
+    deactivateBtn: function() {
+      this.btnPrev.classList.remove('js-visibility');
+      this.btnNext.classList.remove('js-visibility');
+      if (this.currentPage === 1) {
+        this.btnPrev.classList.add('js-visibility');
+      } else if (this.currentPage === this.numberOfPages) {
+        this.btnNext.classList.add('js-visibility');
       }
     },
 
-    Counters: function() {
-      Pagination.secondIndex = Pagination.showingRows * Pagination.currentPage;
-      Pagination.firstIndex = Pagination.secondIndex - (Pagination.showingRows - 1);
-      Pagination.countFrom.innerHTML = Pagination.firstIndex;
-      Pagination.countTo.innerHTML = Pagination.secondIndex;
+    counters: function() {
+      this.secondIndex = this.showingRows * this.currentPage;
+      this.firstIndex = this.secondIndex - (this.showingRows - 1);
+      this.countFrom.innerHTML = this.firstIndex;
+      this.countTo.innerHTML = this.secondIndex;
     },
 
-    ShowMeRows: function() {
-      [].forEach.call(Pagination.rows, (item, i) => {
-        if ((Pagination.firstIndex - 1) <= i && i <= (Pagination.secondIndex - 1)) {
+    showMeRows: function() {
+      [].forEach.call(this.rows, (item, i) => {
+        if ((this.firstIndex - 1) <= i && i <= (this.secondIndex - 1)) {
           item.classList.remove('js-display-none');
           return;
         }
@@ -128,28 +125,28 @@
       });
     },
 
-    Start: function() {
-      Pagination.pagintatorBody.innerHTML = '';
-      if (Pagination.numberOfPages < Pagination.step * 2 + 6) {
-        Pagination.Add(1, Pagination.numberOfPages + 1);
-      } else if (Pagination.currentPage < Pagination.step * 2 + 2) {
-        Pagination.Add(1, Pagination.step * 2 + 4);
-        Pagination.Last();
-      } else if (Pagination.currentPage > Pagination.numberOfPages - Pagination.step * 2 - 1) {
-        Pagination.First();
-        Pagination.Add(Pagination.numberOfPages - Pagination.step * 2 - 2, Pagination.numberOfPages + 1);
+    start: function() {
+      this.pagintatorBody.innerHTML = '';
+      if (this.numberOfPages < this.step * 2 + 6) {
+        this.add(1, this.numberOfPages + 1);
+      } else if (this.currentPage < this.step * 2 + 2) {
+        this.add(1, this.step * 2 + 4);
+        this.last();
+      } else if (this.currentPage > this.numberOfPages - this.step * 2 - 1) {
+        this.first();
+        this.add(this.numberOfPages - this.step * 2 - 2, this.numberOfPages + 1);
       } else {
-        Pagination.First();
-        Pagination.Add(Pagination.currentPage - Pagination.step, Pagination.currentPage + Pagination.step + 1);
-        Pagination.Last();
+        this.first();
+        this.add(this.currentPage - this.step, this.currentPage + this.step + 1);
+        this.last();
       }
-      Pagination.Bind();
-      Pagination.Counters();
-      Pagination.DeactivateBtn();
-      Pagination.ShowMeRows();
+      this.bind();
+      this.counters();
+      this.deactivateBtn();
+      this.showMeRows();
     },
 
-    Init: function(
+    init: function(
       element,
       prev,
       next,
@@ -157,27 +154,27 @@
       amountOfRows,
       counterFrom,
       counterTo
-      ){
-      Pagination.pagintatorBody = element;
-      Pagination.showingRows = amountOfRows;
-      Pagination.countFrom = counterFrom;
-      Pagination.countTo = counterTo;
-      Pagination.rows = arr;
-      Pagination.btnNext = next;
-      Pagination.btnPrev = prev;
-      Pagination.SetNumberOfPage(arr);
-      Pagination.Buttons(prev, next);
-      Pagination.Start();
+      ) {
+      pagination.pagintatorBody = element;
+      pagination.showingRows = amountOfRows;
+      pagination.countFrom = counterFrom;
+      pagination.countTo = counterTo;
+      pagination.rows = arr;
+      pagination.btnNext = next;
+      pagination.btnPrev = prev;
+      pagination.setNumberOfPage(arr);
+      pagination.buttons(prev, next);
+      pagination.start();
     }
   };
 
   document.addEventListener('DOMContentLoaded', function() {
-    Pagination.Init(pagerList, prevPage, nextPage, allRows, inputRowsPerPage.value, from, to);
+    pagination.init(pagerList, prevPage, nextPage, allRows, inputRowsPerPage.value, from, to);
   });
 
 
   inputRowsPerPage.addEventListener('input', function(e) {
-    getNumberOfShowingRows(e, Pagination);
+    getNumberOfShowingRows(e, pagination);
     document.dispatchEvent(loadPage);
   });
 

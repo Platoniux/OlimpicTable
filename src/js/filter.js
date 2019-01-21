@@ -1,5 +1,5 @@
 ;(function() {
-  'use strict'
+  'use strict';
   const filterInput = document.querySelector('.filter__input');
   const countries = document.getElementsByClassName('country');
   const table = document.getElementById('medals-table');
@@ -8,7 +8,7 @@
 
   filterInput.addEventListener('input', function(e) {
     filter(e, countries, allRows);
-  })
+  });
 
   function filter(event, arrOfCells, arrOfRows) {
     let value = event.target.value.toLowerCase();
